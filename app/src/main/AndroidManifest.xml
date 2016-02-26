@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RollViewActivity" />
+        <activity android:name=".ScrollViewMultiplyActivity"/>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

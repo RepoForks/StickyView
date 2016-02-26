@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stickyView(View v) {
-
+        startActivity(new Intent(this,ScrollViewMultiplyActivity.class));
     }
 
     public void stickyView_header(View view) {
