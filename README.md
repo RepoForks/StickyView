@@ -28,8 +28,11 @@ Declare an StickyView inside your XML layout file. You also need to other layout
 
 ### Customization
 You can change contentLayout and floatLayout of the view
+
 app:startHeight ------the height in scrollView init
+
 app:releaseTouch ------Whether to release touch events
+
 app:stickyBackground ------When the view is suspended, the underlying background color
 
 
