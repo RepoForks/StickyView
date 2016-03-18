@@ -10,7 +10,21 @@
         android:id="@+id/roll_root_stickyview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff" />
+        android:background="#ffffff">
+
+        <LinearLayout
+            android:id="@+id/roll_root_stickyview_scrollview_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/roll_root_stickyview_paddingview"
+                android:layout_width="match_parent"
+                android:layout_height="1000dp"
+                android:background="#00000000" />
+        </LinearLayout>
+    </com.cubebox.library.StickyScrollView>
 
     <com.cubebox.library.FloatView
         android:id="@+id/roll_root_floatview"

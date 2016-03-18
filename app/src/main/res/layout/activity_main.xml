@@ -13,12 +13,24 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="stickyView"
-        android:onClick="stickyView"/>
+        android:onClick="stickyView"
+        android:text="stickyView" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="stickyView_header"
-        android:onClick="stickyView_header"/>
+        android:onClick="stickyView_header"
+        android:text="stickyView_header" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="stickyView_list"
+        android:text="stickyView_list" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="stickyView_list2"
+        android:text="stickyView_list2" />
 </LinearLayout>

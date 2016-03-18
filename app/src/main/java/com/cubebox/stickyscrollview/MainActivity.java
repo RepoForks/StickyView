@@ -14,10 +14,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stickyView(View v) {
-        startActivity(new Intent(this,ScrollViewMultiplyActivity.class));
+        startActivity(new Intent(this, ScrollViewMultiplyActivity.class));
     }
 
     public void stickyView_header(View view) {
-        startActivity(new Intent(this,RollViewActivity.class));
+        startActivity(new Intent(this, RollViewActivity.class));
+    }
+
+    public void stickyView_list(View view) {
+        startActivity(new Intent(this, ScrollViewListActivity.class));
+    }
+
+    public void stickyView_list2(View view) {
+        startActivity(new Intent(this, ScrollViewList2Activity.class));
     }
 }

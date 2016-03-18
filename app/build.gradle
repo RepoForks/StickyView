@@ -20,9 +20,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':library')
-    compile files('libs/AMap_3DMap_V3.2.0.1_20160122.jar')
+    compile files('libs/AMap_Services_V2.5.0.jar')
+    compile files('libs/Android_Location_V1.3.3.jar')
+    compile files('libs/Android_Map_V2.5.0.jar')
+    compile 'com.android.support:recyclerview-v7:23.0.0'
 }

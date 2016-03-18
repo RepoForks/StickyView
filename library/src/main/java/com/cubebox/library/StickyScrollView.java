@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
@@ -44,7 +45,17 @@ public class StickyScrollView extends ScrollView {
 
     private OnStickyListener onStickyListener = null;
     private OnScrollerChangeListener onScrollerChangeListener = null;
+    /**
+     * 由于子控件的绘制可能导致scrollview自动滚动到控件更新位置，于是做了在第一次layout的时候则初始化scrollview的滑动位置标记
+     */
+    private boolean hasScrollTop = false;
 
+    /**
+     * touch参数保存
+     */
+    private int downX;
+    private int downY;
+    private int mTouchSlop;
 
     public StickyScrollView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -52,9 +63,10 @@ public class StickyScrollView extends ScrollView {
 
     public StickyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         init();
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
+
 
     /**
      * 初始化
@@ -63,6 +75,7 @@ public class StickyScrollView extends ScrollView {
         stickyViews = new ArrayList<>();
         lastInts = new ArrayList<>();
         offsets = new ArrayList<>();
+
     }
 
 
@@ -101,13 +114,13 @@ public class StickyScrollView extends ScrollView {
                 lastInts.set(i, offset);
 
                 if (onStickyListener != null)
-                    onStickyListener.onStickyScrolling(v, i, offset, v.getHeight());
+                    onStickyListener.onStickyScrolling(v, i, offset, v.getHeight(), true);
             } else {
                 if (v.getVisibility() == INVISIBLE) {
                     v.setVisibility(VISIBLE);
                     lastInts.set(i, 0f);
                     if (onStickyListener != null)
-                        onStickyListener.onStickyScrolling(v, i, 0, v.getHeight());
+                        onStickyListener.onStickyScrolling(v, i, 0, v.getHeight(), false);
                 }
 
                 /**
@@ -119,7 +132,7 @@ public class StickyScrollView extends ScrollView {
                 lastInts.set(i, -1f);
 
                 if (onStickyListener != null)
-                    onStickyListener.onStickyScrolling(v, i, -1f, v.getHeight());
+                    onStickyListener.onStickyScrolling(v, i, -1f, v.getHeight(), false);
 
 
             }
@@ -132,9 +145,22 @@ public class StickyScrollView extends ScrollView {
         return super.onTouchEvent(ev);
     }
 
+
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
+    public boolean onInterceptTouchEvent(MotionEvent e) {
+        int action = e.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                downX = (int) e.getRawX();
+                downY = (int) e.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int moveY = (int) e.getRawY();
+                if (Math.abs(moveY - downY) > mTouchSlop) {
+                    return true;
+                }
+        }
+        return super.onInterceptTouchEvent(e);
     }
 
     @Override
@@ -143,10 +169,18 @@ public class StickyScrollView extends ScrollView {
         if (!isInEditMode()) {
             findStickyViews(getChildAt(0));
             initList();
+            if (hasScrollTop == false && !changed) {
+                scrollTo(0, 0);
+                hasScrollTop = true;
+            }
         }
-
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {

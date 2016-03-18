@@ -18,7 +18,7 @@ public class StickyView extends RelativeLayout implements StickyScrollView.OnScr
     private StickyScrollView stickyScrollView;
     private FloatView floatView;
     private ViewGroup contentView;
-    private LinearLayout outsideLayout;
+    private LinearLayout scrollViewLayout;
     private View paddingView;
 
     private int startHeight = 0;//开始的高度
@@ -53,28 +53,22 @@ public class StickyView extends RelativeLayout implements StickyScrollView.OnScr
         if (contentID == -1 || floatID == -1)
             throw new IllegalArgumentException("contentLayout or floatLayout cannot be null!");
 
-        paddingView = new View(context, attrs);
-        outsideLayout = new LinearLayout(context, attrs);
+        paddingView = rootView.findViewById(R.id.roll_root_stickyview_paddingview);
+        scrollViewLayout = (LinearLayout) rootView.findViewById(R.id.roll_root_stickyview_scrollview_content);
         stickyScrollView = (StickyScrollView) rootView.findViewById(R.id.roll_root_stickyview);
         floatView = (FloatView) rootView.findViewById(R.id.roll_root_floatview);
 
-        paddingView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        outsideLayout.setOrientation(LinearLayout.VERTICAL);
 
         contentView = (ViewGroup) inflate(context, contentID, null);
-        outsideLayout.addView(paddingView, 0);//添加填充图层
-        outsideLayout.addView(contentView);//添加内容图层
+        scrollViewLayout.addView(contentView);//添加内容图层
 
         floatView.addFlotView(inflate(context, floatID, null));
 
-        stickyScrollView.addView(outsideLayout);
 
         //准备透明层界面
         setBackgroundColor(Color.TRANSPARENT);
         stickyScrollView.setBackgroundColor(Color.TRANSPARENT);
         contentView.setBackgroundColor(stickyBackgroundColor);
-        paddingView.setBackgroundColor(Color.TRANSPARENT);
         floatView.setBackgroundColor(Color.TRANSPARENT);
 
         init(context, attrs);
@@ -134,15 +128,22 @@ public class StickyView extends RelativeLayout implements StickyScrollView.OnScr
         currTop = initTop - t;
     }
 
+    /**
+     * 在子布局中吧paddingview设置为超过屏幕的高度，为避免闪烁
+     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
         if (changed) {
             if (isInEditMode()) return;
             initTop = bottom - startHeight;
             currTop = initTop;
             paddingView.getLayoutParams().height = initTop;
         }
+        super.onLayout(changed, left, top, right, bottom);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 }

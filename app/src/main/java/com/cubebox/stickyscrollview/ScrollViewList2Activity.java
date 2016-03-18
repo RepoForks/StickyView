@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RollViewActivity extends AppCompatActivity implements OnStickyListener {
+public class ScrollViewList2Activity extends AppCompatActivity implements OnStickyListener {
+
     private LinearLayout headLayout;
     private TextView headTxt;
 
@@ -36,11 +39,14 @@ public class RollViewActivity extends AppCompatActivity implements OnStickyListe
     private MyViewPagerAdapter viewPagerAdapter1 = null, viewPagerAdapter2 = null;
     private List<View> viewList1 = null, viewList2;
 
+    private List<String> mDatas, mDatas2;
+    private HomeAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_roll_view);
+        setContentView(R.layout.activity_scroll_stichy_list2);
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 必须要写
@@ -67,12 +73,32 @@ public class RollViewActivity extends AppCompatActivity implements OnStickyListe
 
         viewList1 = new ArrayList<>();
         viewList2 = new ArrayList<>();
+
+        mDatas = new ArrayList<>();
+        for (int i = 'A'; i <= 'o'; i++) {
+            mDatas.add("" + (char) i);
+        }
+        mDatas2 = new ArrayList<>();
+        for (int i = 'A'; i <= 'o'; i++) {
+            mDatas2.add("" + (char) i);
+        }
+
+
         setViewList();
+
         viewPagerAdapter1 = new MyViewPagerAdapter(viewList1);
         viewPagerAdapter2 = new MyViewPagerAdapter(viewList2);
 
         viewPager1.setAdapter(viewPagerAdapter1);
         viewPager2.setAdapter(viewPagerAdapter2);
+
+
+        headLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.show(ScrollViewList2Activity.this, "head");
+            }
+        });
     }
 
 
@@ -133,13 +159,20 @@ public class RollViewActivity extends AppCompatActivity implements OnStickyListe
 
     private void setViewList() {
 
-        ImageView v1 = (ImageView) getLayoutInflater().inflate(R.layout.view_img, null);
-        v1.setImageResource(R.mipmap.f1);
-        viewList1.add(v1);
+        RecyclerView r1 = (RecyclerView) getLayoutInflater().inflate(R.layout.view_list, null);
+        r1.setLayoutManager(new FullyLinearLayoutManager(this));
+        r1.setAdapter(mAdapter = new HomeAdapter());
+        viewList1.add(r1);
+
+        RecyclerView r2 = (RecyclerView) getLayoutInflater().inflate(R.layout.view_list, null);
+        r2.setLayoutManager(new FullyLinearLayoutManager(this));
+        r2.setAdapter(mAdapter = new HomeAdapter());
+        viewList1.add(r2);
 
         ImageView v2 = (ImageView) getLayoutInflater().inflate(R.layout.view_img, null);
         v2.setImageResource(R.mipmap.f2);
         viewList1.add(v2);
+
 
         ImageView v3 = (ImageView) getLayoutInflater().inflate(R.layout.view_img, null);
         v3.setImageResource(R.mipmap.f3);
@@ -170,6 +203,82 @@ public class RollViewActivity extends AppCompatActivity implements OnStickyListe
         viewList2.add(v8);
         viewList2.add(v9);
         viewList2.add(v10);
+    }
+
+    class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
+                    ScrollViewList2Activity.this).inflate(R.layout.row_recycler_view, parent,
+                    false));
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            holder.tv.setText(mDatas.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDatas.size();
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+
+            TextView tv;
+
+            public MyViewHolder(View view) {
+                super(view);
+                tv = (TextView) view.findViewById(R.id.row_recycler_view_txt);
+
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtil.show(ScrollViewList2Activity.this, mDatas.get(getAdapterPosition()));
+                    }
+                });
+            }
+        }
+    }
+
+    class HomeAdapter2 extends RecyclerView.Adapter<HomeAdapter2.MyViewHolder> {
+
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            MyViewHolder holder = new MyViewHolder(LayoutInflater.from(
+                    ScrollViewList2Activity.this).inflate(R.layout.row_recycler_view, parent,
+                    false));
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            holder.tv.setText(mDatas2.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDatas2.size();
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+
+            TextView tv;
+
+            public MyViewHolder(View view) {
+                super(view);
+                tv = (TextView) view.findViewById(R.id.row_recycler_view_txt);
+
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtil.show(ScrollViewList2Activity.this, mDatas2.get(getAdapterPosition()));
+                    }
+                });
+            }
+        }
     }
 
     /**

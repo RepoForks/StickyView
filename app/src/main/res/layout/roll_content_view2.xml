@@ -109,8 +109,9 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/roll_content_view_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="500dp"
         android:layout_marginTop="10dp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
